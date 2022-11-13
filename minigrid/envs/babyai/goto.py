@@ -20,11 +20,11 @@ class GoToRedBallGrey(RoomGridLevel):
 
     def gen_mission(self):
         self.place_agent()
-        obj, _ = self.add_object(0, 0, "ball", "red")
+        obj, _ = self.add_object(0, 0, "공", "빨간색")
         dists = self.add_distractors(num_distractors=self.num_dists, all_unique=False)
 
         for dist in dists:
-            dist.color = "grey"
+            dist.color = "회색"
 
         # Make sure no unblocking is required
         self.check_objs_reachable()
@@ -44,7 +44,7 @@ class GoToRedBall(RoomGridLevel):
 
     def gen_mission(self):
         self.place_agent()
-        obj, _ = self.add_object(0, 0, "ball", "red")
+        obj, _ = self.add_object(0, 0, "공", "빨간색")
         self.add_distractors(num_distractors=self.num_dists, all_unique=False)
 
         # Make sure no unblocking is required
@@ -147,7 +147,7 @@ class GoToImpUnlock(RoomGridLevel):
             jk = self._rand_int(0, self.num_rows)
             if ik is id and jk is jd:
                 continue
-            self.add_object(ik, jk, "key", door.color)
+            self.add_object(ik, jk, "열쇠", door.color)
             break
 
         self.connect_all()
@@ -221,11 +221,11 @@ class GoToRedBlueBall(RoomGridLevel):
 
         # Ensure there is only one red or blue ball
         for dist in dists:
-            if dist.type == "ball" and (dist.color == "blue" or dist.color == "red"):
-                raise RejectSampling("can only have one blue or red ball")
+            if dist.type == "공" and (dist.color == "파란색" or dist.color == "빨간색"):
+                raise RejectSampling("파란색이나 빨간색 공 중 하나만 가질 수 있습니다.")
 
-        color = self._rand_elem(["red", "blue"])
-        obj, _ = self.add_object(0, 0, "ball", color)
+        color = self._rand_elem(["빨간색", "파란색"])
+        obj, _ = self.add_object(0, 0, "공", color)
 
         # Make sure no unblocking is required
         self.check_objs_reachable()
@@ -251,7 +251,7 @@ class GoToDoor(RoomGridLevel):
         self.place_agent(1, 1)
 
         obj = self._rand_elem(objs)
-        self.instrs = GoToInstr(ObjDesc("door", obj.color))
+        self.instrs = GoToInstr(ObjDesc("문", obj.color))
 
 
 class GoToObjDoor(RoomGridLevel):

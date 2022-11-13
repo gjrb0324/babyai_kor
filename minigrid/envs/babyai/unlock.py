@@ -30,7 +30,7 @@ class Unlock(RoomGridLevel):
             jk = self._rand_int(0, self.num_rows)
             if ik is id and jk is jd:
                 continue
-            self.add_object(ik, jk, "key", door.color)
+            self.add_object(ik, jk, "열쇠", door.color)
             break
 
         # With 50% probability, ensure that the locked door is the only
@@ -76,7 +76,7 @@ class UnlockLocal(RoomGridLevel):
 
     def gen_mission(self):
         door, _ = self.add_door(1, 1, locked=True)
-        self.add_object(1, 1, "key", door.color)
+        self.add_object(1, 1, "열쇠", door.color)
         if self.distractors:
             self.add_distractors(1, 1, num_distractors=3)
         self.place_agent(1, 1)
@@ -122,11 +122,11 @@ class UnlockPickup(RoomGridLevel):
 
     def gen_mission(self):
         # Add a random object to the room on the right
-        obj, _ = self.add_object(1, 0, kind="box")
+        obj, _ = self.add_object(1, 0, kind="상자")
         # Make sure the two rooms are directly connected by a locked door
         door, _ = self.add_door(0, 0, 0, locked=True)
         # Add a key to unlock the door
-        self.add_object(0, 0, "key", door.color)
+        self.add_object(0, 0, "열쇠", door.color)
         if self.distractors:
             self.add_distractors(num_distractors=4)
 
@@ -152,14 +152,14 @@ class BlockedUnlockPickup(RoomGridLevel):
 
     def gen_mission(self):
         # Add a box to the room on the right
-        obj, _ = self.add_object(1, 0, kind="box")
+        obj, _ = self.add_object(1, 0, kind="상자")
         # Make sure the two rooms are directly connected by a locked door
         door, pos = self.add_door(0, 0, 0, locked=True)
         # Block the door with a ball
         color = self._rand_color()
         self.grid.set(pos[0] - 1, pos[1], Ball(color))
         # Add a key to unlock the door
-        self.add_object(0, 0, "key", door.color)
+        self.add_object(0, 0, "열쇠", door.color)
 
         self.place_agent(0, 0)
 
@@ -187,15 +187,15 @@ class UnlockToUnlock(RoomGridLevel):
         self.add_door(0, 0, door_idx=0, color=colors[0], locked=True)
 
         # Add a key of color A in the room on the right
-        self.add_object(2, 0, kind="key", color=colors[0])
+        self.add_object(2, 0, kind="열쇠", color=colors[0])
 
         # Add a door of color B connecting middle and right room
         self.add_door(1, 0, door_idx=0, color=colors[1], locked=True)
 
         # Add a key of color B in the middle room
-        self.add_object(1, 0, kind="key", color=colors[1])
+        self.add_object(1, 0, kind="열쇠", color=colors[1])
 
-        obj, _ = self.add_object(0, 0, kind="ball")
+        obj, _ = self.add_object(0, 0, kind="공")
 
         self.place_agent(1, 0)
 

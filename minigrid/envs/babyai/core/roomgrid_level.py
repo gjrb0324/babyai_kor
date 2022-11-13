@@ -163,17 +163,18 @@ class RoomGridLevel(RoomGrid):
             # Check that the objects are not already next to each other
             if set(instr.desc_move.obj_set).intersection(set(instr.desc_fixed.obj_set)):
                 raise RejectSampling(
-                    "there are objects that match both lhs and rhs of PutNext"
+                    "PutNext 명령의 좌우 항목에 일치하는 개체가 있습니다." +
+                    "(there are objects that match both lhs and rhs of PutNext)"
                 )
             if instr.objs_next():
-                raise RejectSampling("objs already next to each other")
+                raise RejectSampling("개체들이 이미 서로 옆에 존재하고 있습니다.")
 
             # Check that we are not asking to move an object next to itself
             move = instr.desc_move
             fixed = instr.desc_fixed
             if len(move.obj_set) == 1 and len(fixed.obj_set) == 1:
                 if move.obj_set[0] is fixed.obj_set[0]:
-                    raise RejectSampling("cannot move an object next to itself")
+                    raise RejectSampling("개체를 자기 옆으로 이동할 수 없습니다")
 
         if isinstance(instr, ActionInstr):
             if not hasattr(self, "unblocking") or not self.unblocking:
@@ -184,9 +185,9 @@ class RoomGridLevel(RoomGrid):
             for attr in potential_objects:
                 if hasattr(instr, attr):
                     obj = getattr(instr, attr)
-                    if obj.type == "key" and obj.color in colors_of_locked_doors:
+                    if obj.type == "열쇠" and obj.color in colors_of_locked_doors:
                         raise RejectSampling(
-                            "cannot do anything with/to a key that can be used to open a door"
+                            "열쇠로 아무것도 할 수 있는게 없습니다."
                         )
             return
 
@@ -231,7 +232,7 @@ class RoomGridLevel(RoomGrid):
 
         else:
             raise NotImplementedError(
-                "instr needs to be an instance of PutNextInstr, ActionInstr, or SeqInstr"
+                "지시문이 PutNextInstr, ActionInstr 또는 SeqInstr로 구성되어 있지 않습니다"
             )
 
     def open_all_doors(self):
@@ -275,7 +276,7 @@ class RoomGridLevel(RoomGrid):
 
             # If there is something other than a door in this cell, it
             # blocks reachability
-            if cell and cell.type != "door":
+            if cell and cell.type != "문":
                 continue
 
             # Visit the horizontal and vertical neighbors
@@ -295,7 +296,7 @@ class RoomGridLevel(RoomGrid):
                 if (i, j) not in reachable:
                     if not raise_exc:
                         return False
-                    raise RejectSampling("unreachable object at " + str((i, j)))
+                    raise RejectSampling(str((i, j))+ '로는 갈  수 없습니다.')
 
         # All objects reachable
         return True

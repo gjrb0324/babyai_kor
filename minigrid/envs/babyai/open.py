@@ -51,9 +51,9 @@ class OpenRedDoor(RoomGridLevel):
         super().__init__(num_rows=1, num_cols=2, room_size=5, **kwargs)
 
     def gen_mission(self):
-        obj, _ = self.add_door(0, 0, 0, "red", locked=False)
+        obj, _ = self.add_door(0, 0, 0, "빨간색", locked=False)
         self.place_agent(0, 0)
-        self.instrs = OpenInstr(ObjDesc("door", "red"))
+        self.instrs = OpenInstr(ObjDesc("문", "빨간색"))
 
 
 class OpenDoor(RoomGridLevel):

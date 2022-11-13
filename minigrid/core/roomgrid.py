@@ -207,18 +207,18 @@ class RoomGrid(MiniGridEnv):
         """
 
         if kind is None:
-            kind = self._rand_elem(["key", "ball", "box"])
+            kind = self._rand_elem(["열쇠", "공", "상자"])
 
         if color is None:
             color = self._rand_color()
 
         # TODO: we probably want to add an Object.make helper function
-        assert kind in ["key", "ball", "box"]
-        if kind == "key":
+        assert kind in ["열쇠", "공", "상자"]
+        if kind == "열쇠":
             obj = Key(color)
-        elif kind == "ball":
+        elif kind == "공":
             obj = Ball(color)
-        elif kind == "box":
+        elif kind == "상자":
             obj = Box(color)
         else:
             raise ValueError(
@@ -416,7 +416,7 @@ class RoomGrid(MiniGridEnv):
 
         while len(dists) < num_distractors:
             color = self._rand_elem(COLOR_NAMES)
-            type = self._rand_elem(["key", "ball", "box"])
+            type = self._rand_elem(["열쇠", "공", "상자"])
             obj = (type, color)
 
             if all_unique and obj in objs:

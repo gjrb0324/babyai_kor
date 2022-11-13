@@ -37,7 +37,7 @@ class ActionObjDoor(RoomGridLevel):
         obj = self._rand_elem(objs)
         desc = ObjDesc(obj.type, obj.color)
 
-        if obj.type == "door":
+        if obj.type == "문":
             if self._rand_bool():
                 self.instrs = GoToInstr(desc)
             else:
@@ -83,7 +83,7 @@ class KeyCorridor(RoomGridLevel):
     def __init__(
         self,
         num_rows=3,
-        obj_type="ball",
+        obj_type="공",
         room_size=6,
         max_steps: Optional[int] = None,
         **kwargs
@@ -109,7 +109,7 @@ class KeyCorridor(RoomGridLevel):
         obj, _ = self.add_object(2, room_idx, kind=self.obj_type)
 
         # Add a key in a random room on the left side
-        self.add_object(0, self._rand_int(0, self.num_rows), "key", door.color)
+        self.add_object(0, self._rand_int(0, self.num_rows), "열쇠", door.color)
 
         # Place the agent in the middle
         self.place_agent(1, self.num_rows // 2)
@@ -130,7 +130,7 @@ class OneRoomS8(RoomGridLevel):
         super().__init__(room_size=room_size, num_rows=1, num_cols=1, **kwargs)
 
     def gen_mission(self):
-        obj, _ = self.add_object(0, 0, kind="ball")
+        obj, _ = self.add_object(0, 0, kind="공")
         self.place_agent()
         self.instrs = PickupInstr(ObjDesc(obj.type))
 

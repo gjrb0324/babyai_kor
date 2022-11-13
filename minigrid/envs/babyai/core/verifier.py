@@ -10,13 +10,13 @@ from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC
 from minigrid.minigrid_env import MiniGridEnv
 
 # Object types we are allowed to describe in language
-OBJ_TYPES = ["box", "ball", "key", "door"]
+OBJ_TYPES = ["상자", "공", "열쇠", "문"]
 
 # Object types we are allowed to describe in language
-OBJ_TYPES_NOT_DOOR = list(filter(lambda t: t != "door", OBJ_TYPES))
+OBJ_TYPES_NOT_DOOR = list(filter(lambda t: t != "문", OBJ_TYPES))
 
 # Locations are all relative to the agent's starting position
-LOC_NAMES = ["left", "right", "front", "behind"]
+LOC_NAMES = ["왼쪽", "오른쪽", "앞쪽", "뒤쪽"]
 
 # Environment flag to indicate that done actions should be
 # used by the verifier
@@ -84,18 +84,7 @@ class ObjDesc:
             s = self.color + " " + s
 
         if self.loc:
-            if self.loc == "front":
-                s = s + " in front of you"
-            elif self.loc == "behind":
-                s = s + " behind you"
-            else:
-                s = s + " on your " + self.loc
-
-        # Singular vs plural
-        if len(self.obj_set) > 1:
-            s = "a " + s
-        else:
-            s = "the " + s
+            s = self.loc+'에 있는 ' + s
 
         return s
 
@@ -136,7 +125,7 @@ class ObjDesc:
                     continue
 
                 # Check if object's position matches description
-                if use_location and self.loc in ["left", "right", "front", "behind"]:
+                if use_location and self.loc in ["왼쪽", "오른쪽", "앞쪽", "뒤쪽"]:
                     # Locations apply only to objects in the same room
                     # the agent starts in
                     if not agent_room.pos_inside(i, j):
@@ -151,10 +140,10 @@ class ObjDesc:
 
                     # Check if object's position matches with location
                     pos_matches = {
-                        "left": dot_product(v, d2) < 0,
-                        "right": dot_product(v, d2) > 0,
-                        "front": dot_product(v, d1) > 0,
-                        "behind": dot_product(v, d1) < 0,
+                        "왼쪽": dot_product(v, d2) < 0,
+                        "오른쪽": dot_product(v, d2) > 0,
+                        "앞쪽": dot_product(v, d1) > 0,
+                        "뒤쪽": dot_product(v, d1) < 0,
                     }
 
                     if not (pos_matches[self.loc]):
@@ -250,12 +239,12 @@ class ActionInstr(Instr, ABC):
 class OpenInstr(ActionInstr):
     def __init__(self, obj_desc, strict=False):
         super().__init__()
-        assert obj_desc.type == "door"
+        assert obj_desc.type == "문"
         self.desc = obj_desc
         self.strict = strict
 
     def surface(self, env):
-        return "open " + self.desc.surface(env)
+        return self.desc.surface(env) + '을 여세요.'
 
     def reset_verifier(self, env):
         super().reset_verifier(env)
@@ -277,7 +266,7 @@ class OpenInstr(ActionInstr):
 
         # If in strict mode and the wrong door is opened, failure
         if self.strict:
-            if front_cell and front_cell.type == "door":
+            if front_cell and front_cell.type == "문":
                 return "failure"
 
         return "continue"
@@ -294,7 +283,12 @@ class GoToInstr(ActionInstr):
         self.desc = obj_desc
 
     def surface(self, env):
-        return "go to " + self.desc.surface(env)
+        description = self.desc.surface(env)
+        if description[-1] == "문" or description[-1] == "공":
+            return description + '으로 가세요.'
+        
+        else:
+            return description + '로 가세요.'
 
     def reset_verifier(self, env):
         super().reset_verifier(env)
@@ -320,11 +314,18 @@ class PickupInstr(ActionInstr):
 
     def __init__(self, obj_desc, strict=False):
         super().__init__()
-        assert obj_desc.type != "door"
+        assert obj_desc.type != "문"
         self.desc = obj_desc
         self.strict = strict
 
     def surface(self, env):
+        description = self.desc.surface(env)
+        if description[-1] == '공':
+            return description + '을 획득하세요.'
+
+        else :
+            return description + '를 획득하세요.'
+
         return "pick up " + self.desc.surface(env)
 
     def reset_verifier(self, env):
@@ -367,18 +368,18 @@ class PutNextInstr(ActionInstr):
 
     def __init__(self, obj_move, obj_fixed, strict=False):
         super().__init__()
-        assert obj_move.type != "door"
+        assert obj_move.type != "문"
         self.desc_move = obj_move
         self.desc_fixed = obj_fixed
         self.strict = strict
 
     def surface(self, env):
-        return (
-            "put "
-            + self.desc_move.surface(env)
-            + " next to "
-            + self.desc_fixed.surface(env)
-        )
+        a = self.desc_move.surface(env)
+        b = self.desc_fixed.surface(env)
+        if a[-1] == '공':
+            return b + ' 옆에 ' + a + '을 놓으세요.'
+        else:
+            return b + ' 옆에 ' + a + '을 놓으세요.'
 
     def reset_verifier(self, env):
         super().reset_verifier(env)
@@ -451,7 +452,7 @@ class BeforeInstr(SeqInstr):
     """
 
     def surface(self, env):
-        return self.instr_a.surface(env) + ", then " + self.instr_b.surface(env)
+        return self.instr_a.surface(env) + " 그 후에 " + self.instr_b.surface(env)
 
     def reset_verifier(self, env):
         super().reset_verifier(env)
@@ -492,7 +493,7 @@ class AfterInstr(SeqInstr):
     """
 
     def surface(self, env):
-        return self.instr_a.surface(env) + " after you " + self.instr_b.surface(env)
+        return self.instr_b.surface(env) + " 그 후에 " + self.instr_a.surface(env)
 
     def reset_verifier(self, env):
         super().reset_verifier(env)
@@ -538,7 +539,14 @@ class AndInstr(SeqInstr):
         super().__init__(instr_a, instr_b, strict)
 
     def surface(self, env):
-        return self.instr_a.surface(env) + " and " + self.instr_b.surface(env)
+        if type(self.instr_a) is GoToInstr:
+            return self.Instr_a.surface(env)[:-4] + '가서 ' + self.instr_b.surface(env)
+        if type(self.instr_a) is PickupInstr:
+            return self.instr_a.surface(env)[:-3] + '고, ' + self.instr_b.surface(env)
+        if type(self.instr_a) is OpenInstr:
+            return self.instr_a.surface(env)[:-4] + '열고, ' + self.instr_b.surface(env)
+        if type(self.instr_a) is PutNextInstr:
+            return self.instr_a.surface(env)[:-5] + '놓고, ' + self.instr_b.surface(env)
 
     def reset_verifier(self, env):
         super().reset_verifier(env)

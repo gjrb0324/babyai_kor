@@ -81,13 +81,13 @@ class WorldObj:
             v = Wall(color)
         elif obj_type == "floor":
             v = Floor(color)
-        elif obj_type == "ball":
+        elif obj_type == "공":
             v = Ball(color)
-        elif obj_type == "key":
+        elif obj_type == "열쇠":
             v = Key(color)
-        elif obj_type == "box":
+        elif obj_type == "상자":
             v = Box(color)
-        elif obj_type == "door":
+        elif obj_type == "문":
             v = Door(color, is_open, is_locked)
         elif obj_type == "goal":
             v = Goal()
@@ -105,7 +105,7 @@ class WorldObj:
 
 class Goal(WorldObj):
     def __init__(self):
-        super().__init__("goal", "green")
+        super().__init__("goal", "초록색")
 
     def can_overlap(self):
         return True
@@ -119,7 +119,7 @@ class Floor(WorldObj):
     Colored floor tile the agent can walk over
     """
 
-    def __init__(self, color: str = "blue"):
+    def __init__(self, color: str = "파란색"):
         super().__init__("floor", color)
 
     def can_overlap(self):
@@ -133,7 +133,7 @@ class Floor(WorldObj):
 
 class Lava(WorldObj):
     def __init__(self):
-        super().__init__("lava", "red")
+        super().__init__("lava", "빨간색")
 
     def can_overlap(self):
         return True
@@ -155,7 +155,7 @@ class Lava(WorldObj):
 
 
 class Wall(WorldObj):
-    def __init__(self, color: str = "grey"):
+    def __init__(self, color: str = "회색"):
         super().__init__("wall", color)
 
     def see_behind(self):
@@ -167,7 +167,7 @@ class Wall(WorldObj):
 
 class Door(WorldObj):
     def __init__(self, color: str, is_open: bool = False, is_locked: bool = False):
-        super().__init__("door", color)
+        super().__init__("문", color)
         self.is_open = is_open
         self.is_locked = is_locked
 
@@ -234,8 +234,8 @@ class Door(WorldObj):
 
 
 class Key(WorldObj):
-    def __init__(self, color: str = "blue"):
-        super().__init__("key", color)
+    def __init__(self, color: str = "파란색"):
+        super().__init__("열쇠", color)
 
     def can_pickup(self):
         return True
@@ -256,8 +256,8 @@ class Key(WorldObj):
 
 
 class Ball(WorldObj):
-    def __init__(self, color="blue"):
-        super().__init__("ball", color)
+    def __init__(self, color="파란색"):
+        super().__init__("공", color)
 
     def can_pickup(self):
         return True
@@ -268,7 +268,7 @@ class Ball(WorldObj):
 
 class Box(WorldObj):
     def __init__(self, color, contains: Optional[WorldObj] = None):
-        super().__init__("box", color)
+        super().__init__("상자", color)
         self.contains = contains
 
     def can_pickup(self):

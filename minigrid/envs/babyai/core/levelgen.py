@@ -106,7 +106,7 @@ class LevelGen(RoomGridLevel):
             if key_room is self.locked_room:
                 continue
 
-            self.add_object(i, j, "key", door.color)
+            self.add_object(i, j, "열쇠", door.color)
             break
 
     def rand_obj(self, types=OBJ_TYPES, colors=COLOR_NAMES, max_tries=100):
@@ -167,7 +167,7 @@ class LevelGen(RoomGridLevel):
             elif action == "pickup":
                 return PickupInstr(self.rand_obj(types=OBJ_TYPES_NOT_DOOR))
             elif action == "open":
-                return OpenInstr(self.rand_obj(types=["door"]))
+                return OpenInstr(self.rand_obj(types=["문"]))
             elif action == "putnext":
                 return PutNextInstr(
                     self.rand_obj(types=OBJ_TYPES_NOT_DOOR), self.rand_obj()
