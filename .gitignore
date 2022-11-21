@@ -23,5 +23,3 @@ __pycache__
 .env
 venv
 
-#storage of rl-starter-file
-rl-starter-files/storage/
