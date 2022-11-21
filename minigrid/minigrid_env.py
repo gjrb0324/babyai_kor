@@ -182,10 +182,10 @@ class MiniGridEnv(gym.Env):
         OBJECT_TO_STR = {
             "wall": "W",
             "floor": "F",
-            "door": "D",
-            "key": "K",
-            "ball": "A",
-            "box": "B",
+            "문": "D",
+            "열쇠": "K",
+            "공": "A",
+            "상자": "B",
             "goal": "G",
             "lava": "V",
         }

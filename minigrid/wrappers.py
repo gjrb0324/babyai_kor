@@ -283,16 +283,16 @@ class DictObservationSpaceWrapper(ObservationWrapper):
 
     @staticmethod
     def get_minigrid_words():
-        colors = ["red", "green", "blue", "yellow", "purple", "grey"]
+        colors = ["빨간색", "초록색", "파란색", "노란색", "보라색", "회색"]
         objects = [
             "unseen",
             "empty",
             "wall",
             "floor",
-            "box",
-            "key",
-            "ball",
-            "door",
+            "상자",
+            "열쇠",
+            "공",
+            "문",
             "goal",
             "agent",
             "lava",
